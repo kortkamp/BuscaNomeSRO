@@ -1,0 +1,20 @@
+{
+  "name": "agendamento-vacina",
+  "version": "0.0.1",
+  "description": "Sistema completo para agendamentos de Vacina Covid feito em Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kortkamp/Agendamento-Vacina.git"
+  },
+  "author": "Marcelo Kortkamp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kortkamp/Agendamento-Vacina/issues"
+  },
+  "homepage": "https://github.com/kortkamp/Agendamento-Vacina#readme"
+}
