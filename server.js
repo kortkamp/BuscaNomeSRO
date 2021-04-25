@@ -51,7 +51,7 @@ function onRequest(req, res){
        
     }else{   // We have a http query!
         
-        console.log('html query');
+        console.log('http query');
 
         query = parse(req.url,true).query;
         
@@ -66,7 +66,7 @@ function onRequest(req, res){
         (async () => {
             const db = require("./db");
             //console.log('Começou!');
-            [queryResult] = await db.searchCustomer( {name: query.name});
+            queryResult = await db.searchCustomer( {name: query.name});
             //console.log(queryResult[0]);
 
             
@@ -84,6 +84,7 @@ function onRequest(req, res){
                 jsonReturn.DATA.push(queryResult[i].DATA);
                 jsonReturn.LISTA.push(queryResult[i].LISTA);
                 jsonReturn.SITUACAO.push(queryResult[i].SITUACAO);
+                
                 //console.log(queryResult[i].NOME);
             }
              

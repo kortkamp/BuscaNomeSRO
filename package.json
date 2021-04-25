@@ -19,7 +19,8 @@
   "homepage": "https://github.com/kortkamp/BuscaNomeSRO#readme",
   "dependencies": {
     "mysql": "^2.18.1",
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "string-similarity": "^4.0.4"
   },
   "devDependencies": {}
 }
