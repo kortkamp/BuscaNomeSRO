@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/kortkamp/Agendamento-Vacina/issues"
   },
-  "homepage": "https://github.com/kortkamp/Agendamento-Vacina#readme"
+  "homepage": "https://github.com/kortkamp/Agendamento-Vacina#readme",
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "mysql2": "^2.2.5"
+  }
 }

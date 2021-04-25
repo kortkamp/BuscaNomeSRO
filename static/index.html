@@ -6,21 +6,33 @@
     </head>
 
     <body>
+        <div id= "logo">
+            <img src="./image/LOGO_CORREIOS.png" >
+        </div>
         <div id="container">
+            
             <div id="title">
-                Sistema de busca por nome no SRO
+                Busca por nome no SRO
             </div>
             <div id="databody">
                 <div id="request"> 
-                    <div> 
-                        <input type="text" placeholder="Digite um nome para pesquisar" id="name" name="name">
-                        <button onclick="search()"> Pesquisar </button>
+                    <div id="inputDiv">
+                        <input type="text" placeholder="Digite um nome para pesquisar"
+                                         onfocus="this.placeholder = ''" 
+                                         onblur="this.placeholder = 'Digite um nome para pesquisar'"
+                                         id="name" name="name">
+                        <div id="clearInputDiv">
+                            X
+                        </div>
                     </div>
-
+                    <button id="searchButton" onclick="blur(),search()"> Pesquisar </button>
                 </div>
                 <div id="response">
-                    texto de resposta
+                    
                 </div>
+            </div>
+            <div id="bottonDiv">
+                
             </div>
         </div>
     </body>
