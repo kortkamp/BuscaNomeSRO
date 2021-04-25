@@ -1,7 +1,7 @@
 {
-  "name": "agendamento-vacina",
-  "version": "0.0.1",
-  "description": "Sistema completo para agendamentos de Vacina Covid feito em Node.js",
+  "name": "busca-nome-sro",
+  "version": "1.0.0",
+  "description": "Sistema para consulta por nome nos objetos em LDI no SRO feito em Node.js",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,16 +9,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kortkamp/Agendamento-Vacina.git"
+    "url": "git+https://github.com/kortkamp/BuscaNomeSRO.git"
   },
   "author": "Marcelo Kortkamp",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kortkamp/Agendamento-Vacina/issues"
+    "url": "https://github.com/kortkamp/BuscaNomeSRO/issues"
   },
-  "homepage": "https://github.com/kortkamp/Agendamento-Vacina#readme",
+  "homepage": "https://github.com/kortkamp/BuscaNomeSRO#readme",
   "dependencies": {
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5"
-  }
+  },
+  "devDependencies": {}
 }
