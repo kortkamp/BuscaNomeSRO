@@ -11,26 +11,18 @@ module.exports = server = http.createServer();
 
 server.on('request', onRequest);
 
-jsonReturn =  {
-    "NOME" : [],
-    "CODIGO" : [],
-    "COMPL": [],
-    "DATA": [],
-    "LISTA": [],
-    "SITUACAO": []
-};
+
 
 function onRequest(req, res){
     var filename = parse(req.url).pathname,
         fullPath,
         expensions;
-    //console.log(parse(req.url));//---------------------------
+    
     if(filename === '/'){
         filename = defaultIndex;
     }
     query = parse(req.url).query;
     
-
     
     if(query === null){ // Request file.
         //console.log('response as file');
@@ -49,54 +41,60 @@ function onRequest(req, res){
             res.end();
         });
        
-    }else{   // We have a http query!
+    }else{   // We have a http query!>>>>>>>>>>>>>>>>>>
         
         console.log('http query');
 
         query = parse(req.url,true).query;
+
         
-        //console.log(query);
-
-        var queryResult = [];
-
-        res.writeHead(200, {
-            'Content-Type' : types['json'] || 'application/json'
-        });
-
-        (async () => {
-            const db = require("./db");
-            //console.log('Começou!');
-            queryResult = await db.searchCustomer( {name: query.name});
-            //console.log(queryResult[0]);
-
+        stringJsonResponse = {}; 
+        console.log(" query.name= " + query.name+ " length=" + query.name.lenght );
+        if(query.name != undefined){
             
-            jsonReturn.NOME = [];
-            jsonReturn.CODIGO = [];
-            jsonReturn.COMPL = [];
-            jsonReturn.DATA = [];
-            jsonReturn.LISTA = [];
-            jsonReturn.SITUACAO  = [];
-        
-            for(let i = 0 ; i < queryResult.length ; i++){
-                jsonReturn.NOME.push(queryResult[i].NOME);
-                jsonReturn.CODIGO.push(queryResult[i].CODIGO);
-                jsonReturn.COMPL.push(queryResult[i].COMPLEMENTO);
-                jsonReturn.DATA.push(queryResult[i].DATA);
-                jsonReturn.LISTA.push(queryResult[i].LISTA);
-                jsonReturn.SITUACAO.push(queryResult[i].SITUACAO);
-                
-                //console.log(queryResult[i].NOME);
+            if(query.name.length > 0){
+                console.log(" query.name= " + query.name);
+
+                var queryResult = [];
+
+                res.writeHead(200, {
+                    'Content-Type' : types['json'] || 'application/json'
+                });
+
+                (async () => {
+                    const db = require("./db");
+                    //console.log('Começou!');
+                    queryResult = await db.searchCustomer( {name: query.name});
+                    //console.log(queryResult[0]);
+
+                    jsonReturn = {};
+                    for(index in queryResult[0]){
+                        jsonReturn[index] = [];
+                        //console.log(index);
+                    }
+                    
+                    for(let i = 0 ; i < queryResult.length ; i++){
+                        for(index in queryResult[0]){
+                            jsonReturn[index].push(queryResult[i][index]);
+                        }                
+                    }
+                    
+                    stringJsonResponse = JSON.stringify(jsonReturn);
+                    
+                    res.end(stringJsonResponse);
+                })();
             }
-             
-            stringJson = JSON.stringify(jsonReturn);
-            
-            //console.log(">>>>" + stringJson);
-            res.end(stringJson);
-        })();
-
-        
-
-       
-
+            else{
+                console.log("zero length name");
+                res.writeHead(200, {
+                    'Content-Type' : types['json'] || 'application/json'
+                });
+                res.end("{}");
+            }
+        }
+        else{
+            res.writeHead(404);
+            res.end();
+        }
     }
 }

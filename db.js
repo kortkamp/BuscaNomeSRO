@@ -9,7 +9,7 @@ async function connect(){
 
     const mysql = require("mysql2/promise");
     const connection = await mysql.createConnection(privateConfigs.getConnectString());
-    console.log("Conected to Mysql!");
+    //console.log("Conected to Mysql!");
     global.connection = connection;
     return connection;
 }
@@ -20,9 +20,12 @@ async function searchCustomer(customer){
     const sql = privateConfigs.getSearchQuery();
 
     var searchName = makeGerenericRegexp(customer.name);
+    sqlQueryString = buildSqlQueryString(searchName);
 
-    [sqlResponse] = await conn.query(buildSqlQueryString(searchName), [customer.name]);
+    [sqlResponse] = await conn.query(sqlQueryString, [customer.name]);
     conn.end();
+
+    //console.log(sqlResponse);
     filterEntries(sqlResponse,customer.name);
     return sqlResponse;
 }
@@ -46,14 +49,22 @@ function buildSqlQueryString(name){
 
 function filterEntries(jsonList, name){
     for(let index in jsonList){
-        jsonList[index].TST = stringSimilarity.compareTwoStrings(name.toUpperCase(), jsonList[index].NOME);
-        console.log(jsonList[index].NOME + " - " + name + " = " + jsonList[index].TST);
+        jsonList[index].SIMILARITY = stringSimilarity.compareTwoStrings(name.toUpperCase(), jsonList[index].NOME.toUpperCase());
+        jsonList[index].SIMILARITY *= (name.length)/(jsonList[index].NOME.length+name.length);
+        //console.log( (jsonList[index].NOME.length+name.length)/name.length);
+       
     }
+    jsonList.sort(function(a,b){
+        if (a.SIMILARITY > b.SIMILARITY) return -1;
+        if (a.SIMILARITY < b.TSSIMILARITYT) return 1;
+        return 0;
+    });
 }
 
 function makeGerenericRegexp(name){
+    // sim tá feio pra caramba, mas reaproveitei de um script em vbs que eu já usava.
     regexp  = name.toLowerCase();
-    
+    //console.log(regexp);
     regexp = regexp.replace(/ de /g," ")
     regexp = regexp.replace(/ da /g," ")
     regexp = regexp.replace(/ das /g," ")
@@ -64,6 +75,7 @@ function makeGerenericRegexp(name){
     regexp = regexp.replace(/ã/g,"aaaaa")
     regexp = regexp.replace(/á/g,"aaaaa")
     regexp = regexp.replace(/e/g,"eeeee")
+    regexp = regexp.replace(/é/g,"eeeee")
     regexp = regexp.replace(/ê/g,"eeeee")
     regexp = regexp.replace(/i/g,"iiiii")
     regexp = regexp.replace(/í/g,"iiiii")
@@ -86,8 +98,8 @@ function makeGerenericRegexp(name){
     regexp = regexp.replace(/uuuuu/g,"[uúw]")
     regexp = regexp.replace(/vvvvv/g,"[vw]")
     regexp = regexp.replace(/wwwww/g,"[vwu]")
-    regexp = regexp.replace(/sssss/g,"s*c*ç*")
-    regexp = regexp.replace(/nnnnn/g,"n*m*")
+    regexp = regexp.replace(/sssss/g,"s*c*.")
+    regexp = regexp.replace(/nnnnn/g,"[mn]")
     // Pesquisa 2 ou 1 letra L
     regexp = regexp.replace(/ll/g,"l")
     regexp = regexp.replace(/l/g,"l+")
@@ -98,7 +110,7 @@ function makeGerenericRegexp(name){
     // Ignora o H nas pesquisas 
     regexp = regexp.replace(/h/g,"h*")
 
-    
+    //console.log(regexp);
     return regexp;
 }
 module.exports = {searchCustomer}
