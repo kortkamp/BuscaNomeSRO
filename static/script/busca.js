@@ -16,6 +16,8 @@ $('#clearInputDiv').click(function(){
 
 
 function search(){
+    if(!(document.getElementById("name").value.length > 0))
+        return;
     name = document.getElementById("name").value;
 
     $('#response').html("");
@@ -45,15 +47,29 @@ function updateData(jsonData){
     
     function makeHtmlTable(data){
         var keys = [];
+        var numberOfKeys = 0;
 
         htmlTable = "<table class='table-fill' ><thead><tr>";
         for(let key in data){
             keys.push(key);
-            htmlTable += "<th class='text-left'>" + key + "</th>"
+            htmlTable += "<th class='text-left'>" + key + "</th>";
+            numberOfKeys++;
         }
+       
         htmlTable += "</tr></thead><tbody class='table-hover'>";
-      //  htmlTable = "<table class='table-fill' cellspacing='2' border='1'>\
-       //              <tr><td>NOME</td><td>CODIGO</td><td>COMPLEMENTO</td><td>DATA</td><td>LISTA</td><td>SITUACAO</td> </tr>";    
+        
+
+        if(numberOfKeys == 0){
+            
+            htmlTable = "<table class='table-fill' >\
+                            <thead>\
+                                <tr>\
+                                    <th class='text-left'>Não Encontrado</th>\
+                                </tr>\
+                            </thead>\
+                        </table>";
+        }
+      
        
         for(var index in data[keys[0]] ){
             htmlTable += "<tr>";

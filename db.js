@@ -8,26 +8,40 @@ async function connect(){
         return global.connetion;
 
     const mysql = require("mysql2/promise");
-    const connection = await mysql.createConnection(privateConfigs.getConnectString());
+    error = "";
+    const connection = await mysql.createConnection(privateConfigs.getConnectString())
+                        .catch((err) => {
+                            console.error(`Database connection error: ${err.message}`);
+                            //throw new Error(err);
+                            error = `Database connection error: ${err.message}`;
+
+                        });
     //console.log("Conected to Mysql!");
     global.connection = connection;
-    return connection;
+    return [connection,error];
 }
 
 
 async function searchCustomer(customer){
-    const conn = await connect();
-    const sql = privateConfigs.getSearchQuery();
+    const [conn,error] = await connect();
+    //console.log("connect returns: " + conn);
+    if(conn === undefined){
+        return  [{
+                    ERRO:error
+                }];
+    }else{
+        const sql = privateConfigs.getSearchQuery();
 
-    var searchName = makeGerenericRegexp(customer.name);
-    sqlQueryString = buildSqlQueryString(searchName);
+        var searchName = makeGerenericRegexp(customer.name);
+        sqlQueryString = buildSqlQueryString(searchName);
 
-    [sqlResponse] = await conn.query(sqlQueryString, [customer.name]);
-    conn.end();
+        [sqlResponse] = await conn.query(sqlQueryString, [customer.name]);
+        conn.end();
 
-    //console.log(sqlResponse);
-    filterEntries(sqlResponse,customer.name);
-    return sqlResponse;
+        //console.log(sqlResponse);
+        filterEntries(sqlResponse,customer.name);
+        return sqlResponse;
+    }
 }
  
 
@@ -50,7 +64,7 @@ function buildSqlQueryString(name){
 function filterEntries(jsonList, name){
     for(let index in jsonList){
         jsonList[index].SIMILARITY = stringSimilarity.compareTwoStrings(name.toUpperCase(), jsonList[index].NOME.toUpperCase());
-        jsonList[index].SIMILARITY *= (name.length)/(jsonList[index].NOME.length+name.length);
+        //jsonList[index].SIMILARITY *= (name.length)/(jsonList[index].NOME.length+name.length);
         //console.log( (jsonList[index].NOME.length+name.length)/name.length);
        
     }

@@ -43,17 +43,17 @@ function onRequest(req, res){
        
     }else{   // We have a http query!>>>>>>>>>>>>>>>>>>
         
-        console.log('http query');
+        //console.log('http query');
 
         query = parse(req.url,true).query;
 
         
         stringJsonResponse = {}; 
-        console.log(" query.name= " + query.name+ " length=" + query.name.lenght );
+        //console.log(" query.name= " + query.name+ " length=" + query.name.lenght );
         if(query.name != undefined){
             
             if(query.name.length > 0){
-                console.log(" query.name= " + query.name);
+                //console.log(" query.name= " + query.name);
 
                 var queryResult = [];
 
@@ -65,7 +65,7 @@ function onRequest(req, res){
                     const db = require("./db");
                     //console.log('Começou!');
                     queryResult = await db.searchCustomer( {name: query.name});
-                    //console.log(queryResult[0]);
+                    //console.log(queryResult);
 
                     jsonReturn = {};
                     for(index in queryResult[0]){
@@ -85,7 +85,7 @@ function onRequest(req, res){
                 })();
             }
             else{
-                console.log("zero length name");
+                //console.log("zero length name");
                 res.writeHead(200, {
                     'Content-Type' : types['json'] || 'application/json'
                 });
