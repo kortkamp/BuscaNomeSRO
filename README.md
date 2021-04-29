@@ -9,5 +9,7 @@ Sistema em Node.js para pesquisa por nome dos registros LDI do SRO local
 
 # todo
    * ~~Tratar buscas em branco no backend.~~
-   * Mostram mensagem pra retorno vazio no frontend.
+   * ~~Mostram mensagem pra retorno vazio no frontend.~~
+   * Tratar as rotinas de busca em arquivo js separado.
+   * Refaturar para usar express.js.
 

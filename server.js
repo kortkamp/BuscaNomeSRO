@@ -23,6 +23,7 @@ function onRequest(req, res){
     }
     query = parse(req.url).query;
     
+    console.log(req.url);
     
     if(query === null){ // Request file.
         //console.log('response as file');
