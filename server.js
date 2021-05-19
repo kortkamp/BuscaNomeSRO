@@ -50,6 +50,17 @@ function onRequest(req, res){
 
         
         stringJsonResponse = {}; 
+        if(query.ldi != undefined){
+
+           
+            (async () =>{
+                const ldi = require("./ldi");
+                
+                console.log(await ldi.fillLdiCustomers(query.ldi,query.order))
+            })();
+            
+
+        }
         //console.log(" query.name= " + query.name+ " length=" + query.name.lenght );
         if(query.name != undefined){
             

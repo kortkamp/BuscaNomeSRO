@@ -33,6 +33,24 @@ function search(){
         });
 }
 
+function ldiNames(){
+    if(!(document.getElementById("name").value.length > 0))
+        return;
+    name = document.getElementById("name").value;
+    order = document.getElementById("order").value;
+    $('#response').html("");
+    
+    //$('#response').append("<div id='loadingDiv'>Carregando...</div>");
+
+
+
+    $.getJSON("?ldi=" + name + "&order=" + order , 
+        function(data) {
+            //console.log(data);
+            updateData(data);
+        });
+}
+
 
 /*
     jsonReturn.NOME = [];

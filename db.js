@@ -21,6 +21,61 @@ async function connect(){
     return [connection,error];
 }
 
+async function getLdiEventFromLdiNumber(ldiNumber){
+    const [conn,error] = await connect();
+    let queryString = "SELECT EVE_ID_EVENTO from launchtodlvry where LTD_ID = ? ;";
+    let [[sqlResponse],[]] = await conn.query(queryString, [ldiNumber]);
+    //console.log(queryString + " <= " + ldiNumber)
+    conn.end();
+    
+    return sqlResponse;
+    
+}
+
+async function getObjectsFromLdiEvent(ldiEventCode){
+    const [conn,error] = await connect();
+    let queryString = "SELECT LTD_ITEMCODE from LEDITEMLIST where EVE_ID_EVENTO  = ? AND LTD_CUSTOMERCODE IS NULL ORDER BY LTD_GROUPNUMBER ASC ;";
+    let [sqlResponse] = await conn.query(queryString, [ldiEventCode]);
+    conn.end();
+    
+    return sqlResponse;
+
+}
+
+async function insertCustomer(customerName, orderNumber, CS_CODE){
+    const [conn,error] = await connect();
+    let queryString = "insert into DBSROII.CUSTOMER (CS_NAME, CS_PAPERID, CS_ADDRESSCODE, CS_EMAIL, CS_PHONENUMBER, CS_CELLNUMBER, CS_ADDRESSNUMBER, CS_ADDRESSCOMPL , CS_ADDCEP , CS_CODE) values (?, null, null, null, null, null, null, ?, null, ?)"
+    let sqlResponse = await conn.query(queryString, [customerName + " " + orderNumber , "Ordem " + orderNumber ,CS_CODE]);
+    conn.end();
+    console.log(CS_CODE)
+    return sqlResponse;
+}
+
+async function getCustomerFromObject(objectCode){
+    const [conn,error] = await connect();
+    let queryString = "SELECT LTD_CUSTOMERCODE FROM leditemlist WHERE LTD_ITEMCODE=?";
+    let [[sqlResponse],[]] = await conn.query(queryString, [objectCode]);
+    conn.end();
+    return sqlResponse;
+}
+
+async function updateCustomerCodeInObjectEntry(objectCode,customerCode){
+    const [conn,error] = await connect();
+    let queryString = "update LEDITEMLIST set LTD_CUSTOMERCODE= ? where LTD_ITEMCODE= ?"
+    let sqlResponse = await conn.query(queryString, [customerCode, objectCode]);
+    conn.end();
+    return sqlResponse;
+}
+
+//update DBSROII.LEDITEMLIST set LTD_ITEMCODE='SX299688827BR', LTD_GROUPNUMBER=1, LTD_AR=0, LTD_MP=0, LTD_CUSTOMERCODE='036ca1db4374543a01ab50413c6c636a', EVE_ID_EVENTO='a12f14f27a666e3124905c31b611fc0f', LTD_DD=0, LTD_OD=0, LTD_LASTTIME=null, LTD_COMMENT='', LTD_ITEMDESTINY=1, LTD_DATAHORAOBJETO='2021-05-16 17:02:52', LTD_ORDEMOBJETO=null, LTD_MODOLEITURAOBJETO=null, LTD_USERID=null, LTD_PREPOSTAGEM=null, LTD_VALORAPAGAR=null, LTD_TRIBUTOSAPAGAR=null, LTD_WSNUMBER_LEITURA=107 where LTD_ID_EVENTO='c267bdd108e54c743c3bdedf50e66fc7'
+
+/*
+async function selectCustomer(customerName){
+    const [conn,error] = await connect();
+
+}
+*/
+
 
 async function searchCustomer(customer){
     const [conn,error] = await connect();
@@ -127,4 +182,4 @@ function makeGerenericRegexp(name){
     //console.log(regexp);
     return regexp;
 }
-module.exports = {searchCustomer}
+module.exports = {searchCustomer,insertCustomer,getCustomerFromObject,updateCustomerCodeInObjectEntry,getObjectsFromLdiEvent,getLdiEventFromLdiNumber}

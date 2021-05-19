@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="./css/styles.css">
+        <script src="./script/jquery.min.js"></script>
+        
+    </head>
+
+    <body>
+        <div id= "logo">
+            <img src="./image/LOGO_CORREIOS.png" >
+        </div>
+        <div id="container">
+            
+            <div id="title">
+                Preencher Nomes em LDI
+            </div>
+            <div id="databody">
+                <div id="request"> 
+                    <div id="inputDiv">
+                        <input type="text" placeholder="Digite a LDI para preencher"
+                                         onfocus="this.placeholder = ''" 
+                                         onblur="this.placeholder = 'Digite a LDI para preencher'"
+                                         id="name" name="name">
+                        <div id="clearInputDiv">
+                            X
+                        </div>
+                        
+                    </div>
+                    
+                    <div id="inputDiv">
+                        <input type="text" placeholder="Digite a Ordem"
+                                         onfocus="this.placeholder = ''" 
+                                         onblur="this.placeholder = 'Digite a Ordem'"
+                                         id="order" name="order">
+                        <div id="clearInputDiv">
+                            X
+                        </div>
+                        
+                    </div>
+                    
+                    <button id="searchButton" onclick="blur();ldiNames()"> Preencher </button>
+                </div>
+                <div id="response">
+                    
+                </div>
+            </div>
+            <div id="bottonDiv">
+                
+            </div>
+        </div>
+    </body>
+
+    <script  src="./script/busca.js"></script>
+</html>
+
+
