@@ -11,5 +11,5 @@ Sistema em Node.js para pesquisa por nome dos registros LDI do SRO local
    * ~~Tratar buscas em branco no backend.~~
    * ~~Mostram mensagem pra retorno vazio no frontend.~~
    * Tratar as rotinas de busca em arquivo js separado.
-   * Refaturar para usar express.js.
+   * Refatorar para usar express.js.
 
