@@ -1,0 +1,226 @@
+<head>
+    <link rel="stylesheet" href="/rastreamento/script/template.css">
+    <title>Rastreamento Unificado  </title>
+</head>
+
+<SCRIPT LANGUAGE="JavaScript">
+function Idioma(opcao, idioma, ambiente, portal) {
+Cabecalho.opcao.value = opcao;
+Cabecalho.idioma.value = idioma;
+Cabecalho.ambiente.value = ambiente;
+Cabecalho.portal.value = portal;
+Cabecalho.submit();
+}
+</SCRIPT>
+
+
+
+
+
+<Form Action="/rastreamento/sro" Name="Cabecalho" Method="get">
+
+<Table Align='Center' BgColor="#FFFFCC" Border="0" Width="780" Height="60" BackGround="/rastreamento/imagens/figuraCabecalho.jpg" CellSpacing="0" CellPadding="0">
+<TR><TD>&nbsp;</TD></TR>
+<TR><TD Align='Right'><font face='arial narrow' size='5' color='navy'><B>SRO - Rastreamento Unificado</B></font></TD></TR>
+<TR><TD Align='Right'><B>Ambiente:&nbsp;Produção</B></TD></TR>
+<TR><TD Align='Right'><B>Versão:&nbsp;1.13.0</B></TD></TR>
+</Table>
+
+<input type="hidden" name="opcao">
+<input type="hidden" name="idioma">
+<input type="hidden" name="ambiente">
+<input type="hidden" name="portal">
+
+<Table Align='Center' Width="780" Height='5' Bgcolor='#2455A0' CellSpacing="0" CellPadding="0">
+<TR>
+ <TD Align='Left'>&nbsp;
+    <A hRef="javascript: Idioma('INICIO','001','INTRA','intra');" Name="Idioma"><Font Color='White'><B>Português</B></Font></A>
+    <Font Color='White'>&nbsp;|&nbsp;</Font>
+    <A hRef="javascript: Idioma('INICIO','002','INTRA','intra');" Name="Idioma"><Font Color='White'><B>English</B></Font></A>
+</TD>
+<TD Align='Right'><A hRef='http://www.correios.com.br/sobre-correios/fale-com-os-correios' Target='_blank'><font color="white"><B>Fale com os Correios&nbsp;</B></font></A></TD></TR>
+</TR>
+</Table>
+
+</Form>
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    function doDigits(pStr) {
+            pStr = pStr.toUpperCase();
+            if (pStr.length == 0) {
+                    alert("Por favor, digite o código do objeto.");
+                    document.getElementById("objetos").value = "";
+            } else if (pStr.length != 0) {
+
+                    var temp = "";
+                    pStr = '' + pStr;
+                    splitstring = pStr.split(" ");
+                    for (i = 0; i < splitstring.length; i++) {
+                            temp += splitstring[i];
+                    }
+                    pStr = temp;
+
+                    var reDigits = /^((BJ|NN|CF|CM|CX|ML|PL|PW|SB|TT|PE|MR|UA|ZA|ZB|ZC|ZD)[0-9]{9}|[A-Za-z]{2}[0-9]{9}[A-Za-z]{2}|[N]{2}[0-9]{11}|ZP[0-9]{11})$/;
+                    if ((pStr.indexOf("\r") >= 0) || (pStr.indexOf("\n") >= 0)
+                                    || (pStr.indexOf("\u1310") >= 0)
+                                    || (pStr.indexOf("\t") >= 0) || (pStr.indexOf(";") >= 0)) {
+
+                            while (pStr.indexOf("\r") >= 0) {
+                                    pStr = pStr.replace("\r", ";");
+                            }
+                            while (pStr.indexOf("\n") >= 0) {
+                                    pStr = pStr.replace("\n", ";");
+                            }
+                            while (pStr.indexOf("\u1310") >= 0) {
+                                    pStr = pStr.replace("\u1310", ";");
+                            }
+                            while (pStr.indexOf("\t") >= 0) {
+                                    pStr = pStr.replace("\t", ";");
+                            }
+
+                            if (pStr.indexOf(";") != -1) {
+                                    var objetos = pStr.split(";");
+                                    var objetosE = new String;
+                                    var objetosC = new String;
+                                    var contador = 0;
+                                    var contE = 0;
+                                    var contC = 0;
+
+                                    if (objetos.length > 50) {
+                                            contador = 50;
+
+                                    } else {
+                                            contador = objetos.length;
+                                    }
+
+                                    for (var i = 0; i < contador; i++) {
+                                            var aux = objetos[i];
+
+                                            if (reDigits.test(aux)) {
+                                                    if (contC > 0) {
+                                                            objetosC = objetosC + ";" + aux;
+                                                            contC = contC + 1;
+                                                    } else {
+                                                            objetosC = objetosC + aux;
+                                                            contC = contC + 1;
+                                                    }
+                                            } else if (aux != "") {
+
+                                                    objetosE = objetosE + aux + ",";
+                                                    contE = contE + 1;
+                                            }
+                                    }
+                            }
+                            var teste = objetosE.split(";");
+                            var teste2 = new String;
+                            var tt = 0;
+                            for (j = 0; j < teste.length; j++)
+                                    if (teste[j].length > 0)
+                                            teste2 += teste[j];
+                            objetosE = teste2;
+                            if (objetosE.length > 1) {
+
+                                    alert("O(s) código(s) do(s) objeto(s) "
+                                                    + objetosE
+                                                    + " estão fora do padrão estabelecido, dessa forma não serão rastreados. ");
+
+                                    document.getElementById("objetos").value = objetosC;
+                            }
+
+                            document.getElementById("btnPesquisar").disabled = true;
+                            frmPesquisa.submit();
+
+                    } else if (!reDigits.test(pStr)) {
+                            alert("O(s) código(s) do(s) " + pStr
+                                            + " objeto(s) estão fora do padrão estabelecido.");
+
+                    } else {
+                            frmPesquisa.submit();
+                    }
+
+            }
+
+    }
+</script>
+
+
+<form name="frmPesquisa" id="frmPesquisa" method="POST"
+    action="/rastreamento/sro"
+    onsubmit="doDigits(this.objetos.value); return false;">
+
+    <input type="hidden" name="opcao" value="PESQUISA"> <input
+            type="hidden" name="portal"
+            value="intra">
+
+    <Table Align='Center' Width='750' Border='0'>
+            <TR>
+                    <TD>
+                             <B>Prezado usuário,</B><BR>  Estamos disponibilizando mais um servi&ccedil;o visando melhor  atend&ecirc;-lo. Trata-se da possibilidade de rastreamento de  objetos sob registro que trafegam nos Correios. Colocamo-nos &agrave;  disposi&ccedil;&atilde;o para cr&iacute;ticas e sugestões:  <a href="mailto:sro@correios.com.br">sro@correios.com.br</a>
+
+                    </TD>
+            </TR>
+            <TR>
+                    <TD>&nbsp;</TD>
+            </TR>
+            <tr>
+                    <td Colspan='8' Align='Center'>
+                            <H3>ATENÇÃO! Informações desta página são exclusivamente de uso interno.</H3>
+
+                    </td>
+            </tr>
+            <TR>
+                    <TD>
+                            <Table Align="Left" Width="750" Border="0">
+
+                                    <TR>
+                                             <B>Dicas para pesquisa:</B><BR>  Pesquisar um objeto: digite o identificador (códigos dos objetos).<BR>  Ex: SS123456789BR<BR>  Pesquisar v&aacute;rios objetos: digite os identificadores (códigos dos objetos)  com ponto-e-v&iacute;rgula entre eles.<BR>  Ex: SS123456789BR; SS987654321BR; SS100833276BR<BR>  Limite: 50 objetos e 50 eventos por objeto. <BR> 
+
+
+                                    <TR>
+                            </Table>
+                    </TD>
+            </TR>
+            <TR>
+                    <TD>
+                            <Table Align='Left' Width='750' Border='0'>
+
+                                    <TR>
+                                            <TD Align='Left' Width='460'><TextArea Rows="4"
+                                                            Name="objetos" id="objetos" Cols="35"
+                                                            Style="HEIGHT: 63px; WIDTH: 450px"></TextArea></TD>
+                                            <TD Align='Center' vAlign='Top' Width='50'>
+
+                                                    <br> <input type="submit" value="Pesquisar"
+                                                    id="btnPesquisar"><br>
+                                            </TD>
+                                            <TD></TD>
+                                    </TR>
+
+                            </Table>
+                    </TD>
+            </TR>
+            <TR>
+                    <TD>
+                            <Table Align='Left' Width='750' Border='0'>
+
+                                    <TR>
+                                             <B>Rastreamento Internacional:</B><BR> Remessas internacionais com código do objeto iniciado com 'R’ e terminado  com 'BR' não possuem rastreamento eletrônico garantido fora do território  brasileiro. Para obtenção de informação sobre a entrega desses objetos no  país de destino, é possível efetuar-se o pedido de informação, após o término do  prazo estimado de entrega, disponível no link Fale Conosco. </BR> Para conhecer o significado das siglas adotadas no identificador do objeto,  para cada serviço, <b><A hRef='/rastreamento/sro?opcao=SIGLAS'>Clique Aqui</A></b><BR/> 
+
+                                    </TR>
+
+
+                            </Table>
+                    </TD>
+            </TR>
+    </Table>
+</form>
+<br>

@@ -1,10 +1,11 @@
 const axios = require('axios');
+const querystring = require('querystring');
 
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const url = 'http://10.8.88.217/rastreamento/sro';
+const url = 'http://app.correiosnet.int/rastreamento/sro';
 
 
 
@@ -14,6 +15,9 @@ const url = 'http://10.8.88.217/rastreamento/sro';
 function makeBody(data,codObjeto){
 
     const position = data.search("','PO','")
+
+    //console.log(data)
+    //console.log(`posição : ${position}`)
 
     codOperacao =  'PO';
     codRegistro =  data.substring(position + 8,position + 18);
@@ -37,30 +41,47 @@ function makeBody(data,codObjeto){
 }
 
 function searchName(data){
-    const initPosition = data.indexOf('Destinat',0) + 25;
-    const finalPosition = data.indexOf('</TD>', initPosition) - 5;
+    const dataString = String(data)
 
-    const nome = data.substring(initPosition,finalPosition);
 
-    return nome;
+    const initPosition = dataString.indexOf('Destinat',0) + 25;
+
+    
+    const finalPosition = dataString.indexOf('</TD>', initPosition) - 5;
+
+    const name = dataString.substring(initPosition,finalPosition);
+    return name;
 }
 
 
 
-async function getList(codObjeto){
-    axios.post(url,{
+async function getObjectCustomerName(codObjeto){
+
+
+
+
+    axios.post(url,querystring.stringify({
         opcao: 'PESQUISA',
         portal: 'intra',
         objetos: codObjeto
+      }),{
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+          }
       }).then(result => {
+
+          //console.log(`${result.data}`)
 
           const body = makeBody(result.data,codObjeto);
 
-          console.log(body)
 
-          axios.post(url,body).then(result =>{
+          axios.post(url,querystring.stringify(body),{
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }).then(result =>{
 
-              const name = searchName(result)
+              const name = searchName(result.data)
               console.log(name)
               return name;
           })
@@ -71,11 +92,11 @@ async function getList(codObjeto){
       });
 }
 
-async function getObjectCustomerName(code){
+async function getObjectCustomerName2(code){
     console.log("++++")
     await timeout(1000);
     return("Random Name for code "+ code)
 }
 
 
-module.exports = {getObjectCustomerName, getList}
+module.exports = {getObjectCustomerName}
