@@ -57,33 +57,38 @@ function searchName(data){
 
 async function getObjectCustomerName(codObjeto){
 
-    axios.post(url,querystring.stringify({
-        opcao: 'PESQUISA',
-        portal: 'intra',
-        objetos: codObjeto
-      }),{
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-          }
-      }).then(result => {
+    return new Promise(resolve => {
+        axios.post(url,querystring.stringify({
+            opcao: 'PESQUISA',
+            portal: 'intra',
+            objetos: codObjeto
+          }),{
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+              }
+          }).then(result => {
+    
+              //console.log(`${result.data}`)
+    
+              const body = makeBody(result.data,codObjeto);
+    
+    
+              axios.post(url,querystring.stringify(body),{
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+              }).then(result =>{
+    
+                  const name = searchName(result.data)
+                  //console.log(`name in crawler: ${name}`)
+                  resolve(name);
+              })
+              
+          });
 
-          //console.log(`${result.data}`)
 
-          const body = makeBody(result.data,codObjeto);
+    });
 
-
-          axios.post(url,querystring.stringify(body),{
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          }).then(result =>{
-
-              const name = searchName(result.data)
-              console.log(name)
-              return name;
-          })
-          
-      });
 }
 
 async function getObjectCustomerName2(code){

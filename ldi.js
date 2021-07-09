@@ -37,12 +37,14 @@ async function getObjectsFromLdi(ldiNumber){
 async function fillObjectCustomerName(objectCode,orderNumber){
 
     // get customer name on Web
-    let customerName = await crawler.getObjectCustomerName(objectCode).catch((err)=>{
-        console.log(`Error :  ${err}`)
+    let customerName = await crawler.getObjectCustomerName(objectCode)
+    .catch((err)=>{
+        console.log(err)
     });
     console.log(`customerName from crawler: ${customerName}`)
     
-    if(customerName){
+    if(customerName){ // prevent db write
+        customerName = customerName + ' AP '
         let csCode = await createCustomerEntry(customerName,orderNumber)
     
         if( await isCustomerCodePending(objectCode)){
