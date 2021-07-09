@@ -57,9 +57,6 @@ function searchName(data){
 
 async function getObjectCustomerName(codObjeto){
 
-
-
-
     axios.post(url,querystring.stringify({
         opcao: 'PESQUISA',
         portal: 'intra',
@@ -86,15 +83,18 @@ async function getObjectCustomerName(codObjeto){
               return name;
           })
           
-
-          
-
       });
 }
 
 async function getObjectCustomerName2(code){
     console.log("++++")
-    await timeout(1000);
+
+    if(Math.random > 0.2){
+
+        console.log('throw error')
+        throw new Error('rand0m simulated error');
+    }
+    await timeout(10);
     return("Random Name for code "+ code)
 }
 

@@ -36,19 +36,21 @@ async function getObjectsFromLdi(ldiNumber){
 
 async function fillObjectCustomerName(objectCode,orderNumber){
 
-    
-
-    
     // get customer name on Web
-    let customerName = await crawler.getObjectCustomerName(objectCode);
+    let customerName = await crawler.getObjectCustomerName(objectCode).catch((err)=>{
+        console.log(`Error :  ${err}`)
+    });
+    console.log(`customerName from crawler: ${customerName}`)
     
-    let csCode = await createCustomerEntry(customerName,orderNumber)
-
-    if( await isCustomerCodePending(objectCode)){
-        console.log( " update csCode "+ await db.updateCustomerCodeInObjectEntry(objectCode,csCode))
-        console.log("update name")
+    if(customerName){
+        let csCode = await createCustomerEntry(customerName,orderNumber)
+    
+        if( await isCustomerCodePending(objectCode)){
+            console.log( " update csCode "+ await db.updateCustomerCodeInObjectEntry(objectCode,csCode))
+            console.log("update name")
+        }
+        // put name on db
     }
-    // put name on db
     
     return("done for "+ objectCode)
 }
